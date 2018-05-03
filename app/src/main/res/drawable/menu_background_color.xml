@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">    
+    <!-- focused and not pressed-->		
+	<item 
+		android:state_focused="true" 
+		android:state_pressed="false"
+		android:drawable="@color/menu_background_selected_color" 
+		/>
+		
+	<!-- focused and pressed -->				
+	<item 
+		android:state_focused="true" 
+		android:state_pressed="true"
+		android:drawable="@color/menu_background_selected_color" 
+		/>
+
+	<!-- pressed no focus -->		
+	<item 
+		android:state_focused="false" 
+		android:state_pressed="true"
+		android:drawable="@color/menu_background_selected_color" 
+		/>
+
+
+	<!-- default -->		
+	<item 
+		android:drawable="@color/menu_background_color" 
+		android:textColor="@color/all_black"
+		/>
+</selector>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">  
+
+	<color name="timer_red">#D40236</color>    
+	<color name="timer_yellow">#EBE842</color>    
+	<color name="timer_green">#3DBA1A</color>    
+
+	<color name="red">#FF0000</color>    
+	<color name="green">#3000FF00</color>    
+	<color name="blue">#300000FF</color>
+		 
+    <color name="gold">#FFD318</color>
+    <color name="all_white">#FFFFFF</color>
+    <color name="all_black">#000000</color>    
+    <color name="grey_1">#111111</color>    
+    <color name="grey_2">#444444</color>    
+    <color name="grey_3">#777777</color>    
+    <color name="grey_4">#999999</color>    
+    <color name="disabled_grey">#111111</color> 
+	<color name="semi_grey">#88111111</color>    
+       
+    <color name="clear">#00000000</color>    
+    <color name="blue_text">#7272A9</color>    
+	<color name="header_orange">#66F8B048</color>
+	
+	<color name="green_tinge">#6635C023</color>
+    <color name="white_text">#FFFFFF</color>
+    
+	<!-- Dialog -->	
+	<color name="dialog_bg">#88000000</color> 
+    
+	<!-- List Colors -->
+	<color name="list_even_row_color">#ee333333</color>
+	<color name="list_odd_row_color">#ee222222</color>
+    <color name="selected_row_highlight">#9971CE17</color>
+
+	<!-- Title Bar -->    
+    <color name="titlebackgroundcolor">#FF9000</color>
+    <color name="titlebackgroundtextcolor">#AADD81</color>
+    <color name="titletextcolor">#FFFFFF</color>
+    
+	<!-- Menu -->
+    <color name="menu_background_color">#444444</color>
+    <color name="menu_background_selected_color">#9971CE17</color>
+    <color name="menu_text_color">#000000</color>    
+
+	<!-- Font Color -->    
+    <color name="font_color_1">#FFFFFF</color>
+    <color name="font_color_2">#DDDDDD</color>
+    <color name="font_color_3">#BBBBBB</color>
+    
+
+	<!-- GPS View colors -->
+    <color name="gps_status_color">#9C9C9C</color>
+	
+</resources>

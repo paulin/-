@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/listitem_background" 
+    android:paddingLeft="5dp" 
+    android:paddingRight="5dp" android:paddingTop="5dp">
+	
+
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_weight="1"
+		android:orientation="vertical" 
+	    android:layout_height="wrap_content" 
+	    android:clipChildren="false">
+	    <TextView  
+			android:id="@+id/locationrequest_fromname" 
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content" 
+    		android:gravity="left"
+    		android:textSize="14sp"
+    		android:textStyle="bold"
+    		android:textColor="@color/font_color_1"
+    		/>
+
+    		
+		<TextView
+			android:id="@+id/locationrequest_message" 
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content" 
+    		android:textColor="@color/font_color_2"
+    		android:autoLink="web"
+    		android:textSize="12sp"
+    		android:paddingRight="3dp"
+    		android:gravity="left"
+    		/>
+	</LinearLayout>
+	<LinearLayout
+    		android:layout_width="100dp"
+    		android:layout_height="wrap_content" 
+			android:orientation="vertical" 
+    		android:paddingBottom="5dp">
+		<TextView 
+			android:id="@+id/locationrequest_state" 
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content" 
+    		android:textColor="@color/font_color_2" 
+    		android:textSize="12sp"
+    		android:gravity="right"
+			/> 
+		<TextView 
+			android:id="@+id/locationrequest_time" 			
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content" 
+    		android:textStyle="normal"
+    		android:textColor="@color/font_color_2" 
+    		android:paddingLeft="5dp" 
+    		android:textSize="12sp"
+    		android:gravity="right" 
+			/>
+		<TextView 
+			android:id="@+id/locationrequest_date" 			
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content" 
+    		android:textStyle="normal"
+    		android:textColor="@color/font_color_2" 
+    		android:paddingLeft="5dp" 
+    		android:textSize="12sp"
+    		android:gravity="right" 
+			/>
+   	</LinearLayout>   	
+</LinearLayout>      

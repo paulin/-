@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">    
+    <!-- focused and not pressed-->		
+	<item 
+		android:state_focused="true" 
+		android:state_pressed="false"
+		android:drawable="@color/selected_row_highlight" 
+		/>
+		
+	<!-- focused and pressed -->				
+	<item 
+		android:state_focused="true" 
+		android:state_pressed="true"
+		android:drawable="@color/selected_row_highlight" 
+		/>
+
+	<!-- pressed no focus -->		
+	<item 
+		android:state_focused="false" 
+		android:state_pressed="true"
+		android:drawable="@color/selected_row_highlight" 
+		/>
+
+	<!-- default -->		
+	<item 
+		android:drawable="@color/list_even_row_color" 
+		/>
+</selector>

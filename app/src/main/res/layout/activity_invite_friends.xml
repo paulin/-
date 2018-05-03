@@ -1,0 +1,92 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/explanation_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="7dp"
+        android:text="@string/invite_friends_help_text"
+        android:textColor="@color/all_white"
+        android:textSize="18sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       	
+       	android:layout_marginTop="5dp"
+       	android:layout_marginBottom="15dp"        
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        
+        android:padding = "7dp"
+        android:text="@string/invite_message"
+        android:textColor="@color/gold"
+        android:background="@color/semi_grey"
+        android:textSize="15sp" />
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/contacts_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:paddingLeft="15dp"            
+            android:paddingRight="15dp"            
+             >
+            
+        </ListView>
+
+        <RelativeLayout
+            android:id="@+id/relative_layout_4buttons"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
+            android:layout_marginTop="9dp"
+            android:layout_weight="0"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/dismiss_dialog_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="15dp"
+                android:padding="10dp"
+                android:paddingLeft="7dp"
+                android:text="@string/dismiss_invite_friends"
+                android:textColor="@color/all_white"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/invite_friends_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="15dp"
+
+                android:padding="10dp"
+                android:text="@string/invite_friends_button"
+                android:textColor="@color/all_white"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</LinearLayout>
