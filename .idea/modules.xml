@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FriendFlare.iml" filepath="$PROJECT_DIR$/FriendFlare.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FriendFlare/FriendFlare-FriendFlare.iml" filepath="$PROJECT_DIR$/FriendFlare/FriendFlare-FriendFlare.iml" />
     </modules>
   </component>
 </project>
