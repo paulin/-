@@ -17,13 +17,6 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.pugetworks.database.DbAdapter;
-import com.pugetworks.database.LocationRequest;
-import com.pugetworks.database.LocationRequestState;
-import com.pugetworks.utils.BitlyAndroid;
-
-
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -126,13 +119,6 @@ public class GPSService extends Service {
 		//This works but is slow
 		location_manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 50, 0, mGpsListener);
 		location_manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 50, 0, mGpsListener);
-
-		//I moved this before the countdown to see if flurry would be able to send the message while the countdown was going
-
-		EasyTracker.getInstance().setContext(this);
-		EasyTracker.getTracker().sendEvent(TAG, GoogleAnalytics.RESPONSE_MESSAGE_SENT, "Response Sent", 1l);
-
-
 
 		countdown =  new CountDownTimer(WAIT_TIME, WAIT_TIME) {
 
