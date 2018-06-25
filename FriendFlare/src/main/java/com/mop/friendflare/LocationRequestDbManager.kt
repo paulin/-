@@ -20,7 +20,7 @@ class LocationRequestDbManager {
     private val dbVersion = 1
 
     private val CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + dbTable + " (" + colId + " INTEGER PRIMARY KEY," +
-            colReqDate + " DATETIME, " + colState + " INTEGER, " + colNumber + " TEXT, " + colRequester + " TEXT, " + colNote + " TEXT);"
+            colReqDate + " BIGINT, " + colState + " INTEGER, " + colNumber + " TEXT, " + colRequester + " TEXT, " + colNote + " TEXT);"
     private var db: SQLiteDatabase? = null
 
     constructor(context: Context) {

@@ -1,45 +1,77 @@
 package com.mop.friendflare
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.BaseAdapter
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.time.LocalDate
+
+private var listRequests = ArrayList<Note>()
 
 class MainActivity : AppCompatActivity() {
 
-    private var listNotes = ArrayList<Note>()
+    private var listRequests = ArrayList<LocationRequest>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        listNotes.add(Note(1, "JavaSampleApproach", "Java technology, Spring Framework - approach to Java by Sample."))
-        listNotes.add(Note(2, "Kotlin Android Tutorial", "Create tutorial for people to learn Kotlin Android. Kotlin is now an official language on Android. It's expressive, concise, and powerful. Best of all, it's interoperable with our existing Android languages and runtime."))
-        listNotes.add(Note(3, "Android Studio", "Android Studio 3.0 provides helpful tools to help you start using Kotlin. Convert entire Java files or convert code snippets on the fly when you paste Java code into a Kotlin file."))
-        listNotes.add(Note(4, "Java Android Tutorial", "Create tutorial for people to learn Java Android. Learn Java in a greatly improved learning environment with more lessons, real practice opportunity, and community support."))
-        listNotes.add(Note(5, "Spring Boot Tutorial", "Spring Boot help build stand-alone, production Spring Applications easily, less configuration then rapidly start new projects."))
+        loadQueryAll()
 
-        var notesAdapter = NotesAdapter(this, listNotes)
-        lvNotes.adapter = notesAdapter
-        lvNotes.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, id ->
-            Toast.makeText(this, "Click on " + listNotes[position].title, Toast.LENGTH_SHORT).show()
+        lvRequests.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, id ->
+            Toast.makeText(this, "Click on " + com.mop.friendflare.listRequests[position].title, Toast.LENGTH_SHORT).show()
         }
-
     }
 
-    inner class NotesAdapter : BaseAdapter {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
 
-        private var notesList = ArrayList<Note>()
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadQueryAll()
+    }
+
+    fun loadQueryAll() {
+
+        var dbManager = LocationRequestDbManager(this)
+        val cursor = dbManager.queryAll()
+
+        listRequests.clear()
+        if (cursor.moveToFirst()) {
+
+            do {
+                val id = cursor.getInt(cursor.getColumnIndex("Id"))
+                val state = LocationRequestState.valueOf(cursor.getString(cursor.getColumnIndex("State")))
+                val date = LocalDate.ofEpochDay(cursor.getLong(cursor.getColumnIndex("Date")))
+                val phoneNumber = cursor.getString(cursor.getColumnIndex("Phone"))
+                val who = cursor.getString(cursor.getColumnIndex("Who"))
+                val note = cursor.getString(cursor.getColumnIndex("Note"))
+
+                listRequests.add(LocationRequest(id, state, date, phoneNumber, who, note))
+
+            } while (cursor.moveToNext())
+        }
+
+        var requestAdapter = LocationRequestAdapter(this, listRequests)
+        lvRequests.adapter = requestAdapter
+    }
+
+
+    inner class LocationRequestAdapter : BaseAdapter {
+
+        private var notesList = ArrayList<LocationRequest>()
         private var context: Context? = null
 
-        constructor(context: Context, notesList: ArrayList<Note>) : super() {
+        constructor(context: Context, notesList: ArrayList<LocationRequest>) : super() {
             this.notesList = notesList
             this.context = context
         }
@@ -59,8 +91,21 @@ class MainActivity : AppCompatActivity() {
                 vh = view.tag as ViewHolder
             }
 
-            vh.tvTitle.text = notesList[position].title
-            vh.tvContent.text = notesList[position].content
+            var mNote = notesList[position]
+
+            vh.tvTitle.text = mNote.requested
+            vh.tvContent.text = mNote.phoneNumber
+
+            vh.ivEdit.setOnClickListener {
+                updateNote(mNote)
+            }
+
+            vh.ivDelete.setOnClickListener {
+                var dbManager = LocationRequestDbManager(this.context!!)
+                val selectionArgs = arrayOf(mNote.id.toString())
+                dbManager.delete("Id=?", selectionArgs)
+                loadQueryAll()
+            }
 
             return view
         }
@@ -78,14 +123,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateNote(locationRequest: LocationRequest) {
+        var intent = Intent(this, LocationRequestActivity::class.java)
+        intent.putExtra("MainActId", locationRequest.id)
+        intent.putExtra("MainActTitle", locationRequest.requested)
+        intent.putExtra("MainActContent", locationRequest.phoneNumber)
+        startActivity(intent)
+    }
+
     private class ViewHolder(view: View?) {
         val tvTitle: TextView
         val tvContent: TextView
+        val ivEdit: ImageView
+        val ivDelete: ImageView
 
         init {
             this.tvTitle = view?.findViewById(R.id.tvTitle) as TextView
             this.tvContent = view?.findViewById(R.id.tvContent) as TextView
+            this.ivEdit = view?.findViewById(R.id.ivEdit) as ImageView
+            this.ivDelete = view?.findViewById(R.id.ivDelete) as ImageView
         }
     }
-
 }

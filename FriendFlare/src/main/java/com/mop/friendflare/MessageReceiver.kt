@@ -54,18 +54,10 @@ class MessageReceiver : BroadcastReceiver() {
                     //Create a new location request
                     var values = ContentValues()
                     values.put("Date", LocalDate.now().toEpochDay())
-                    values.put("State", LocationRequestState.NEW)
+                    values.put("State", LocationRequestState.NEW.toString())
                     values.put("Number", fromNumber)
-                    values.put("Requester", edtContent.text.toString())
+                    values.put("Requester", name)
                     values.put("Note", name)
-
-
-                    val request = LocationRequest();
-                    request.date = LocalDate.now()
-                    request.phoneNumber = fromNumber
-                    request.requested = name
-                    request.locationState = LocationRequestState.NEW
-
 
                     //Add it to the database
                     var dbManager = LocationRequestDbManager(context)
