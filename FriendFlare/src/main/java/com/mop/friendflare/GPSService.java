@@ -22,9 +22,7 @@ import com.pugetworks.database.DbAdapter;
 import com.pugetworks.database.LocationRequest;
 import com.pugetworks.database.LocationRequestState;
 import com.pugetworks.utils.BitlyAndroid;
-import com.pugetworks.utils.GeoUtils;
-import com.pugetworks.utils.GoogleAnalytics;
-import com.pugetworks.utils.LogConstants;
+
 
 import org.json.JSONException;
 
