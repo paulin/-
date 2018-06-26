@@ -67,7 +67,7 @@ class MessageReceiver : BroadcastReceiver() {
                     //Fire up the service
                     val i = Intent()
                     //					i.putExtra(WhereMain.FROM_NUMBER, fromNumber);  Doesn't seem to work for later versions
-                    i.setClass(context, GPSService::class.java)
+   //TODO Uncomment                 i.setClass(context, GPSService::class.java)
                     context.startService(i)
 
                     //					initService(context);

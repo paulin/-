@@ -12,8 +12,6 @@ import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.time.LocalDate
 
-private var listRequests = ArrayList<Note>()
-
 class MainActivity : AppCompatActivity() {
 
     private var listRequests = ArrayList<LocationRequest>()
@@ -25,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         loadQueryAll()
 
         lvRequests.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, id ->
-            Toast.makeText(this, "Click on " + com.mop.friendflare.listRequests[position].title, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Click on " + listRequests[position].phoneNumber, Toast.LENGTH_SHORT).show()
         }
     }
 
