@@ -30,7 +30,7 @@ class SendLocationActivity : AppCompatActivity() {
 
 
             Toast.makeText(this, "Got GEO!", Toast.LENGTH_LONG).show()
-            values.put("Content", edtContent.text.toString())
+            //values.put("Content", edtContent.text.toString())
         }
 
 
@@ -39,7 +39,7 @@ class SendLocationActivity : AppCompatActivity() {
 
             var values = ContentValues()
 
-            values.put("Content", edtContent.text.toString())
+            //values.put("Content", edtContent.text.toString())
 
         }
 
