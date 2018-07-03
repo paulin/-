@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.mop.friendflare.GPSService" />
+        <!--<service android:name="com.mop.friendflare.GPSService" />-->
         <receiver android:name=".MessageReceiver" >
             <intent-filter>
                 <action
