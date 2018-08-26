@@ -16,22 +16,26 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.text.Html
 import android.view.View
 import android.widget.Toast
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_location_request.*
 import kotlinx.android.synthetic.main.activity_send_location.*
 
 class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.google.android.gms.location.LocationListener {
 
+    private val ZOOM_LEVEL = 12
+    private val MAP_STRING_TEST = "http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=48.71518,-122.107856&sll=47.61357,-122.33139&sspn=0.471215,1.242828&ie=UTF8&z=" + ZOOM_LEVEL
+
+
+    private val FRIEND_FLARE_MSG_TEMPLATE = "Here\'s my location: %s (sent via http://www.whereu-at.com )"
+
     private var REQUEST_LOCATION_CODE = 101
     private var mGoogleApiClient: GoogleApiClient? = null
-    private var mLocation: Location? = null
-    private var mLocationRequest: LocationRequest? = null
-    private val UPDATE_INTERVAL = (2 * 1000).toLong()  /* 10 secs */
-    private val FASTEST_INTERVAL: Long = 2000 /* 2 sec */
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient;
 
     var id = 0
 
@@ -60,31 +64,20 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
 
     @SuppressLint("MissingPermission")
     private fun getLocation() {
-        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        mFusedLocationClient.lastLocation
+                .addOnSuccessListener { location : Location? ->
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        tvLatitude.text = location!!.latitude.toString()
+                        tvLongitude.text = location!!.longitude.toString()
+                    } else {
+                        Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-        if (mLocation == null) {
-            startLocationUpdates();
-        }
-        if (mLocation != null) {
-            tvLatitude.text = mLocation!!.latitude.toString()
-            tvLongitude.text = mLocation!!.longitude.toString()
-        } else {
-            Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
-        }
     }
 
-    private fun startLocationUpdates() {
-        // Create the location request
-        mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(UPDATE_INTERVAL)
-                .setFastestInterval(FASTEST_INTERVAL)
-        // Request location updates
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this)
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +94,20 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
 
         btGetGeo.setOnClickListener(this)
 
+        btFormURL.setOnClickListener {
+            Toast.makeText(this, "Form URL", Toast.LENGTH_LONG).show()
+
+
+//            tvLongURL.setText("http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=${tvLatitude.text},${tvLongitude.text}&ie=UTF8&z=$ZOOM_LEVEL")
+
+            var bodyData = "<html> <a href=\\\"http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=${tvLatitude.text},${tvLongitude.text}&ie=UTF8&z=$ZOOM_LEVEL\">Click HERE</a> </html>"
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                tvLongURL.setText(Html.fromHtml(bodyData,Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                tvLongURL.setText(Html.fromHtml(bodyData));
+            }
+            //values.put("Content", edtContent.text.toString())
+        }
 
         btShrink.setOnClickListener {
             Toast.makeText(this, "Shrinking URL", Toast.LENGTH_LONG).show()
@@ -113,6 +120,8 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
         btSend.setOnClickListener {
             Toast.makeText(this, "Sending Geo", Toast.LENGTH_LONG).show()
         }
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         tvLatitude.text = "Mattitude"
         tvLongitude.text = "Mongitude"

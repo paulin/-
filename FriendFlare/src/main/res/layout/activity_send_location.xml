@@ -5,13 +5,12 @@
     android:orientation="vertical"
     android:padding="15dp">
 
-    <EditText
-        android:id="@+id/edtTitle"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btGetGeo"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:hint="Java Sample Approach"
-        android:inputType="textPersonName" />
+        android:layout_marginTop="20dp"
+        android:text="Get Location" />
 
     <TextView
         android:id="@+id/tvLatitude"
@@ -31,11 +30,20 @@
 
 
     <Button
-        android:id="@+id/btGetGeo"
+        android:id="@+id/btFormURL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Get Location" />
+        android:text="Form URL" />
+
+    <TextView
+        android:id="@+id/tvLongURL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="Latitude."
+        android:inputType="textMultiLine"
+        android:text="URL:" />
 
     <Button
         android:id="@+id/btShrink"
@@ -51,16 +59,4 @@
         android:layout_marginTop="20dp"
         android:text="Share Location" />
 
-    <TextView android:id="@+id/geoTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Hello World!"/>
-
-    <Button android:id="@+id/geoGetButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Get"
-        />
 </LinearLayout>
