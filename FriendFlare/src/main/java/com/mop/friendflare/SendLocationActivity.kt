@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -16,21 +17,25 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.telephony.SmsManager
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.Toast
+import com.bitly.Bitly
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_location_request.*
 import kotlinx.android.synthetic.main.activity_send_location.*
 
+
 class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.google.android.gms.location.LocationListener {
 
+    private val BITLYID = "R_55e77b4936404a9b9ef9fb0787b6edb5"
     private val ZOOM_LEVEL = 12
     private val MAP_STRING_TEST = "http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=48.71518,-122.107856&sll=47.61357,-122.33139&sspn=0.471215,1.242828&ie=UTF8&z=" + ZOOM_LEVEL
-
+    private val CONTENT_URI_SENT_MESSAGES = "content://sms/sent";
 
     private val FRIEND_FLARE_MSG_TEMPLATE = "Here\'s my location: %s (sent via http://www.whereu-at.com )"
 
@@ -66,7 +71,7 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
     @SuppressLint("MissingPermission")
     private fun getLocation() {
         mFusedLocationClient.lastLocation
-                .addOnSuccessListener { location : Location? ->
+                .addOnSuccessListener { location: Location? ->
                     // Got last known location. In some rare situations this can be null.
                     if (location != null) {
                         tvLatitude.text = location!!.latitude.toString()
@@ -77,7 +82,6 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
                 }
 
     }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +107,7 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
 
             var bodyData = "<html> <a href=\\\"http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=${tvLatitude.text},${tvLongitude.text}&ie=UTF8&z=$ZOOM_LEVEL\">Click HERE</a> </html>"
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                tvLongURL.setText(Html.fromHtml(bodyData,Html.FROM_HTML_MODE_LEGACY));
+                tvLongURL.setText(Html.fromHtml(bodyData, Html.FROM_HTML_MODE_LEGACY));
             } else {
                 tvLongURL.setText(Html.fromHtml(bodyData));
             }
@@ -125,6 +129,7 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
 
         btSend.setOnClickListener {
             Toast.makeText(this, "Sending Geo", Toast.LENGTH_LONG).show()
+            sendTextMessages()
         }
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -133,6 +138,24 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
         tvLongitude.text = "Mongitude"
 
         buildGoogleApiClient()
+
+        Bitly.initialize(this, BITLYID);
+
+//        Bitly.initialize(this, "YOUR_APP_ID", Arrays.asList("yourdomain.com","yourotherdomain.com"), Arrays.asList("yourscheme"), new Bitly.Callback() {
+//        Bitly.Callback() {
+//
+//        }
+//            public void onResponse(Response response) {
+//                // response provides a Response object which contains the full URL information
+//                // response includes a status code
+//                // Your custom logic goes here...
+//            }
+//
+//            public void onError(Error error) {
+//                // error provides any errors in retrieving information about the URL
+//                // Your custom logic goes here...
+//            }
+//        });
     }
 
     @Synchronized
@@ -148,6 +171,28 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
         if (!isLocationEnabled())
             showAlert()
         return isLocationEnabled()
+    }
+
+    public fun sendTextMessages() {
+        val msg = "Hello from Matt"
+        val contactAddress = "2062261460"
+
+
+        val sms : SmsManager = SmsManager.getDefault ()
+        sms.sendTextMessage(contactAddress, null, msg, null, null)
+        Toast.makeText(this, "Message Sent", Toast.LENGTH_LONG).show()
+    }
+
+    /**
+     * This makes sure that the message is displayed as an outgoing message to the user
+     */
+    public fun insertSMS(context : Context, address : String, body : String ) {
+
+        val resolver = this.getContentResolver()
+        val values = ContentValues()
+        values.put("address", address)
+        values.put("body", body)
+        resolver.insert(Uri.parse(CONTENT_URI_SENT_MESSAGES), values)
     }
 
     private fun showAlert() {
@@ -212,4 +257,6 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
             mGoogleApiClient!!.disconnect()
         }
     }
+
+
 }
