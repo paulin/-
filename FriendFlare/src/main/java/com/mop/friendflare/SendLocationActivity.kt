@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.Toast
 import com.google.android.gms.common.api.GoogleApiClient
@@ -105,6 +106,11 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
                 tvLongURL.setText(Html.fromHtml(bodyData,Html.FROM_HTML_MODE_LEGACY));
             } else {
                 tvLongURL.setText(Html.fromHtml(bodyData));
+            }
+            tvLongURL.setMovementMethod(LinkMovementMethod.getInstance())
+            tvLongURL.setOnClickListener {
+                Toast.makeText(this, "I'm in the shizzle", Toast.LENGTH_LONG).show()
+
             }
             //values.put("Content", edtContent.text.toString())
         }
