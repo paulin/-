@@ -33,8 +33,10 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
 
     private val BITLYID = "R_55e77b4936404a9b9ef9fb0787b6edb5"
     private val ZOOM_LEVEL = 12
+    private val MY_PERMISSIONS_REQUEST_RECEIVE_SMS = 41
     private val MY_PERMISSIONS_REQUEST_SEND_SMS = 42
     private val MY_PERMISSIONS_REQUEST_READ_CONTACTS = 43
+
     private val MAP_STRING_TEST = "http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=48.71518,-122.107856&sll=47.61357,-122.33139&sspn=0.471215,1.242828&ie=UTF8&z=" + ZOOM_LEVEL
     private val CONTENT_URI_SENT_MESSAGES = "content://sms/sent";
 
@@ -161,11 +163,31 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
                 // Permission has already been granted
             }
 
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                Manifest.permission.RECEIVE_SMS)) {
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+
+                } else {
+                    // No explanation needed, we can request the permission.
+                    ActivityCompat.requestPermissions(this,
+                            arrayOf(Manifest.permission.RECEIVE_SMS),
+                            this.MY_PERMISSIONS_REQUEST_RECEIVE_SMS)
+                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+            }
+
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 //Request Location Permission
                 checkLocationPermission()
-            } 
+            }
 
 
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
