@@ -5,22 +5,33 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.os.Build.ID
 import android.widget.Toast
+import java.util.Date
+import android.util.Log
+import com.mop.friendflare.R.layout.note
+import java.time.ZoneId
 
 class LocationRequestDbManager {
 
+    val TAG = "LocationRequestDbManager"
     private val dbName = "LocationRequests"
     private val dbTable = "Requests"
-    private val colId = "Id"
-    private val colReqDate = "Date"
-    private val colState = "State"
-    private val colNumber = "Number"
-    private val colRequester = "Requester"
-    private val colNote = "Note"
     private val dbVersion = 1
 
-    private val CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + dbTable + " (" + colId + " INTEGER PRIMARY KEY," +
-            colReqDate + " BIGINT, " + colState + " INTEGER, " + colNumber + " TEXT, " + colRequester + " TEXT, " + colNote + " TEXT);"
+    companion object {
+        const val COL_ID = "Id"
+        const val COL_REQUEST_DATE = "Date"
+        const val COL_STATE = "State"
+        const val COL_NUMBER = "Number"
+        const val COL_REQUESTER = "Requester"
+        const val COL_NOTE = "Note"
+    }
+
+    private val TABLE_LOC_REQUEST = "locationrequest"
+
+    private val CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + dbTable + " (" + COL_ID + " INTEGER PRIMARY KEY," +
+            COL_REQUEST_DATE + " BIGINT, " + COL_STATE + " INTEGER, " + COL_NUMBER + " TEXT, " + COL_REQUESTER + " TEXT, " + COL_NOTE + " TEXT);"
     private var db: SQLiteDatabase? = null
 
     constructor(context: Context) {
@@ -32,6 +43,45 @@ class LocationRequestDbManager {
 
         val ID = db!!.insert(dbTable, "", values)
         return ID
+    }
+
+    /**
+     * Returns an arraylist of history in the new state
+     *
+     * @param    category    The category you are interested in
+     */
+    fun fetchLocationRequest(state: LocationRequestState): ArrayList<LocationRequest> {
+        val historyArray = ArrayList<LocationRequest>()
+        Log.v(LogConstants.MATT_TAG, "Fetching Location for State [" + state.name + "]")
+        val cursor = db.query(
+                TABLE_LOC_REQUEST,
+                arrayOf<String>(),
+                LocationRequest.LOCATION_STATE_COLUMN_NAME + " = ?",
+                arrayOf("" + state.name),
+                null,
+                null,
+                LocationRequest.DATE_COLUMN_NAME + " desc",
+                null)
+        
+        var history: LocationRequest? = null
+        val count = cursor.getCount()
+        cursor.moveToFirst()
+        Log.v(TAG, "Count Location Request $count")
+        for (i in 0 until count) {
+            cursor.moveToPosition(i)
+            var id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_ID)))
+            var locationState = LocationRequestState.valueOf(cursor.getString(cursor.getColumnIndex(COL_STATE)))
+            var date = Date(cursor.getLong(cursor.getColumnIndex(COL_REQUEST_DATE))*1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            var phoneNumber = cursor.getString(cursor.getColumnIndex(COL_NUMBER))
+            var whoRequested = cursor.getString(cursor.getColumnIndex(COL_REQUESTER))
+            var note = cursor.getString(cursor.getColumnIndex(COL_NOTE))
+
+            history = LocationRequest(id, locationState, date, phoneNumber, whoRequested, note )
+            historyArray.add(history)
+        }
+        cursor.close()
+
+        return historyArray
     }
 
     fun queryAll(): Cursor {

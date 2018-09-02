@@ -64,13 +64,14 @@ class MessageReceiver : BroadcastReceiver() {
                     val mID = dbManager.insert(values)
 
 
-                    //Fire up the service
-                    val i = Intent()
-                    //					i.putExtra(WhereMain.FROM_NUMBER, fromNumber);  Doesn't seem to work for later versions
-   //TODO Uncomment                 i.setClass(context, GPSService::class.java)
-                    context.startService(i)
-
-                    //					initService(context);
+                    //Dies here, I'm not entirely sure this is how I want this to work anyway.
+//                    //Fire up the service
+//                    val i = Intent()
+//                    //					i.putExtra(WhereMain.FROM_NUMBER, fromNumber);  Doesn't seem to work for later versions
+//   //TODO Uncomment                 i.setClass(context, GPSService::class.java)
+//                    context.startService(i)
+//
+//                    //					initService(context);
                 }
             }
         }
@@ -100,7 +101,7 @@ class MessageReceiver : BroadcastReceiver() {
         private val TAG = "MessageReceiver"
         val SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED"
 
-        val MAGIC_WORD = "U@?"
+        val MAGIC_WORD = "Matt@?"
         val NO_NAME = "???"
 
         fun getOnlyNumerics(str: String?): String? {

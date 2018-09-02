@@ -4,6 +4,7 @@ import java.time.LocalDate
 
 class LocationRequest {
 
+
     var id: Int? = null
     var date: LocalDate? = null
     var locationState: LocationRequestState? = null
@@ -19,5 +20,4 @@ class LocationRequest {
         this.requested = whoRequested
         this.reqNote = reqNote
     }
-
 }
