@@ -5,12 +5,11 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.os.Build.ID
-import android.widget.Toast
-import java.util.Date
 import android.util.Log
-import com.mop.friendflare.R.layout.note
+import android.widget.Toast
 import java.time.ZoneId
+import java.util.Date
+import kotlin.collections.ArrayList
 
 class LocationRequestDbManager {
 
@@ -53,32 +52,29 @@ class LocationRequestDbManager {
     fun fetchLocationRequest(state: LocationRequestState): ArrayList<LocationRequest> {
         val historyArray = ArrayList<LocationRequest>()
         Log.v(LogConstants.MATT_TAG, "Fetching Location for State [" + state.name + "]")
-        val cursor = db.query(
-                TABLE_LOC_REQUEST,
-                arrayOf<String>(),
-                LocationRequest.LOCATION_STATE_COLUMN_NAME + " = ?",
-                arrayOf("" + state.name),
-                null,
-                null,
-                LocationRequest.DATE_COLUMN_NAME + " desc",
-                null)
-        
+        val query =
+                "SELECT * FROM $TABLE_LOC_REQUEST WHERE $COL_STATE =  \"$state\""
+        val cursor = db!!.rawQuery(query, null)
+
         var history: LocationRequest? = null
         val count = cursor.getCount()
-        cursor.moveToFirst()
         Log.v(TAG, "Count Location Request $count")
-        for (i in 0 until count) {
-            cursor.moveToPosition(i)
-            var id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_ID)))
-            var locationState = LocationRequestState.valueOf(cursor.getString(cursor.getColumnIndex(COL_STATE)))
-            var date = Date(cursor.getLong(cursor.getColumnIndex(COL_REQUEST_DATE))*1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            var phoneNumber = cursor.getString(cursor.getColumnIndex(COL_NUMBER))
-            var whoRequested = cursor.getString(cursor.getColumnIndex(COL_REQUESTER))
-            var note = cursor.getString(cursor.getColumnIndex(COL_NOTE))
+        if(cursor.moveToFirst()) {
+            cursor.moveToFirst()
+            for (i in 0 until count) {
+                cursor.moveToPosition(i)
+                var id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_ID)))
+                var locationState = LocationRequestState.valueOf(cursor.getString(cursor.getColumnIndex(COL_STATE)))
+                var date = Date(cursor.getLong(cursor.getColumnIndex(COL_REQUEST_DATE))*1000).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                var phoneNumber = cursor.getString(cursor.getColumnIndex(COL_NUMBER))
+                var whoRequested = cursor.getString(cursor.getColumnIndex(COL_REQUESTER))
+                var note = cursor.getString(cursor.getColumnIndex(COL_NOTE))
 
-            history = LocationRequest(id, locationState, date, phoneNumber, whoRequested, note )
-            historyArray.add(history)
+                history = LocationRequest(id, locationState, date, phoneNumber, whoRequested, note )
+                historyArray.add(history)
+            }
         }
+
         cursor.close()
 
         return historyArray
