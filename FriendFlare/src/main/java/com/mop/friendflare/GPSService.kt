@@ -1,29 +1,10 @@
 package com.mop.friendflare
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.json.JSONException;
-
-import android.app.Service;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.ContentValues.TAG
-import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.IBinder;
-import android.telephony.SmsManager;
-import android.util.Log;
-import android.widget.Toast;
-
+import android.app.Service
+import android.content.Intent
+import android.os.IBinder
+import android.util.Log
 
 
 class GPSService : Service() {
@@ -51,7 +32,7 @@ class GPSService : Service() {
     private val mBinder = object : IRemoteGPSService.Stub() {
 
         @Throws(android.os.RemoteException::class)
-        fun resentTexts(): Int {
+        override fun resentTexts(): Int {
             resendMessages()
             return 0
         }
