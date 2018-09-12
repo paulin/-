@@ -1,5 +1,6 @@
 package com.mop.friendflare
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -46,8 +47,12 @@ class MainActivity : AppCompatActivity() {
                     var intent = Intent(this, SendLocationActivity::class.java)
                     startActivity(intent)
                 }
-                R.id.test_request -> {
-                    sendTestRequest()
+                R.id.fake_request -> {
+                    makeFakeRequest()
+                }
+                R.id.action_settings -> {
+                    var intent = Intent(this, DeveloperActivity::class.java)
+                    startActivity(intent)
                 }
             }
         }
@@ -60,8 +65,20 @@ class MainActivity : AppCompatActivity() {
         loadQueryAll()
     }
 
-    fun sendTestRequest() {
+    fun makeFakeRequest() {
+        //Create a new location request
+        var values = ContentValues()
+        val tempState = LocationRequestState.NEW.type
+        val tempDate = System.currentTimeMillis()
+        values.put("State", tempState)
+        values.put("Number", "123456789")
+        values.put("Requester", "Fakey McFake Face")
+        values.put("Note", "This isn't real")
+        values.put("Date", tempDate)
 
+        //Add it to the database
+        var dbManager = LocationRequestDbManager(this)
+        val mID = dbManager.insert(values)
     }
 
     fun loadQueryAll() {

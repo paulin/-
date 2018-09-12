@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mop.friendflare.MainActivityOld">
     <item
-        android:id="@+id/test_request"
+        android:id="@+id/fake_request"
         android:orderInCategory="100"
-        android:title="@string/test_request"
+        android:title="@string/fake_request"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
