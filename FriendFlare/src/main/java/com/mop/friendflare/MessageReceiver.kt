@@ -1,5 +1,6 @@
 package com.mop.friendflare
 
+
 import android.content.BroadcastReceiver
 import android.content.ContentValues
 import android.content.Context
@@ -11,9 +12,6 @@ import android.provider.BaseColumns
 import android.provider.ContactsContract
 import android.telephony.SmsMessage
 import android.util.Log
-
-
-import java.time.LocalDate
 
 
 class MessageReceiver : BroadcastReceiver() {
@@ -53,11 +51,13 @@ class MessageReceiver : BroadcastReceiver() {
                 if (name != NO_NAME) {
                     //Create a new location request
                     var values = ContentValues()
-                    values.put("Date", LocalDate.now().toEpochDay())
-                    values.put("State", LocationRequestState.NEW.toString())
+                    val tempState = LocationRequestState.NEW.type
+                    val tempDate = System.currentTimeMillis()
+                    values.put("State", tempState)
                     values.put("Number", fromNumber)
                     values.put("Requester", name)
                     values.put("Note", name)
+                    values.put("Date", tempDate)
 
                     //Add it to the database
                     var dbManager = LocationRequestDbManager(context)
@@ -65,13 +65,13 @@ class MessageReceiver : BroadcastReceiver() {
 
 
                     //Dies here, I'm not entirely sure this is how I want this to work anyway.
-//                    //Fire up the service
-//                    val i = Intent()
-//                    //					i.putExtra(WhereMain.FROM_NUMBER, fromNumber);  Doesn't seem to work for later versions
-//   //TODO Uncomment                 i.setClass(context, GPSService::class.java)
-//                    context.startService(i)
-//
-//                    //					initService(context);
+                    //Fire up the service
+                    val i = Intent()
+                    //					i.putExtra(WhereMain.FROM_NUMBER, fromNumber);  Doesn't seem to work for later versions
+                    i.setClass(context, GPSService::class.java)
+                    context.startService(i)
+
+                    //					initService(context);
                 }
             }
         }
@@ -101,7 +101,7 @@ class MessageReceiver : BroadcastReceiver() {
         private val TAG = "MessageReceiver"
         val SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED"
 
-        val MAGIC_WORD = "Matt@?"
+        val MAGIC_WORD = "@@?"
         val NO_NAME = "???"
 
         fun getOnlyNumerics(str: String?): String? {

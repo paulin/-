@@ -58,7 +58,7 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
         if (!checkGPSEnabled()) {
             return
         }
-        getLocation();
+        getLocation()
 
     }
 

@@ -1,6 +1,7 @@
 package com.mop.friendflare
 
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
@@ -48,6 +49,23 @@ class GPSService : Service() {
      * Grabs the location and resents
      */
     private fun resendMessages() {
+        Log.v(LogConstants.MATT_TAG, "GPS Service Resending Locations")
+
+        getLocation()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLocation() {
+//        mFusedLocationClient.lastLocation
+//                .addOnSuccessListener { location: Location? ->
+//                    // Got last known location. In some rare situations this can be null.
+//                    if (location != null) {
+//                        tvLatitude.text = location!!.latitude.toString()
+//                        tvLongitude.text = location!!.longitude.toString()
+//                    } else {
+//                        Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
 
     }
 

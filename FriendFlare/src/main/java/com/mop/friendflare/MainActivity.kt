@@ -11,11 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private var listRequests = ArrayList<LocationRequest>()
+
+    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.getDefault())
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 
             do {
                 val id = cursor.getInt(cursor.getColumnIndex("Id"))
-                val state = LocationRequestState.valueOf(cursor.getString(cursor.getColumnIndex("State")))
+                val state = LocationRequestState.getLocationRequestStateName(cursor.getString(cursor.getColumnIndex("State")))
                 val date = LocalDate.ofEpochDay(cursor.getLong(cursor.getColumnIndex("Date")))
                 val phoneNumber = cursor.getString(cursor.getColumnIndex("Phone"))
                 val who = cursor.getString(cursor.getColumnIndex("Who"))
@@ -80,11 +85,11 @@ class MainActivity : AppCompatActivity() {
 
     inner class LocationRequestAdapter : BaseAdapter {
 
-        private var notesList = ArrayList<LocationRequest>()
+        private var pingList = ArrayList<LocationRequest>()
         private var context: Context? = null
 
-        constructor(context: Context, notesList: ArrayList<LocationRequest>) : super() {
-            this.notesList = notesList
+        constructor(context: Context, pingList: ArrayList<LocationRequest>) : super() {
+            this.pingList = pingList
             this.context = context
         }
 
@@ -103,18 +108,21 @@ class MainActivity : AppCompatActivity() {
                 vh = view.tag as ViewHolder
             }
 
-            var mNote = notesList[position]
+            var mPing = pingList[position]
 
-            vh.tvTitle.text = mNote.requested
-            vh.tvContent.text = mNote.phoneNumber
+            formatter.timeZone = TimeZone.getTimeZone("UTC")
+            val formattedDate = formatter.format(mPing.date)
+
+            vh.tvTitle.text = mPing.requested
+            vh.tvContent.text = "Request from [" + mPing.phoneNumber + "] on [" + formattedDate + "]"
 
             vh.ivEdit.setOnClickListener {
-                updateNote(mNote)
+                updateNote(mPing)
             }
 
             vh.ivDelete.setOnClickListener {
                 var dbManager = LocationRequestDbManager(this.context!!)
-                val selectionArgs = arrayOf(mNote.id.toString())
+                val selectionArgs = arrayOf(mPing.id.toString())
                 dbManager.delete("Id=?", selectionArgs)
                 loadQueryAll()
             }
@@ -123,7 +131,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getItem(position: Int): Any {
-            return notesList[position]
+            return pingList[position]
         }
 
         override fun getItemId(position: Int): Long {
@@ -131,7 +139,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getCount(): Int {
-            return notesList.size
+            return pingList.size
         }
     }
 
