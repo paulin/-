@@ -46,6 +46,10 @@ class MainActivity : AppCompatActivity() {
                     var intent = Intent(this, SendLocationActivity::class.java)
                     startActivity(intent)
                 }
+                R.id.action_settings -> {
+                    var intent = Intent(this, DeveloperActivity::class.java)
+                    startActivity(intent)
+                }
             }
         }
 
