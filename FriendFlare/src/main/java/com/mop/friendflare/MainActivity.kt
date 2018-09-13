@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private var listRequests = ArrayList<LocationRequest>()
 
     val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.getDefault())
-
+    val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,11 +69,11 @@ class MainActivity : AppCompatActivity() {
         var values = ContentValues()
         val tempState = LocationRequestState.NEW.type
         val tempDate = System.currentTimeMillis()
-        values.put("State", tempState)
-        values.put("Number", "123456789")
-        values.put("Requester", "Fakey McFake Face")
-        values.put("Note", "This isn't real")
-        values.put("Date", tempDate)
+        values.put(LocationRequestDbManager.COL_STATE, tempState)
+        values.put(LocationRequestDbManager.COL_NUMBER, "123456789")
+        values.put(LocationRequestDbManager.COL_REQUESTER, "Fakey McFake Face")
+        values.put(LocationRequestDbManager.COL_NOTE, "This isn't real")
+        values.put(LocationRequestDbManager.COL_REQUEST_DATE, tempDate)
 
         //Add it to the database
         var dbManager = LocationRequestDbManager(this)
@@ -84,23 +83,8 @@ class MainActivity : AppCompatActivity() {
     fun loadQueryAll() {
 
         var dbManager = LocationRequestDbManager(this)
-        val cursor = dbManager.queryAll()
 
-        listRequests.clear()
-        if (cursor.moveToFirst()) {
-
-            do {
-                val id = cursor.getInt(cursor.getColumnIndex("Id"))
-                val state = LocationRequestState.getLocationRequestStateName(cursor.getString(cursor.getColumnIndex("State")))
-                val date = LocalDate.ofEpochDay(cursor.getLong(cursor.getColumnIndex("Date")))
-                val phoneNumber = cursor.getString(cursor.getColumnIndex("Phone"))
-                val who = cursor.getString(cursor.getColumnIndex("Who"))
-                val note = cursor.getString(cursor.getColumnIndex("Note"))
-
-                listRequests.add(LocationRequest(id, state, date, phoneNumber, who, note))
-
-            } while (cursor.moveToNext())
-        }
+        listRequests = dbManager.fetchLocationRequest(LocationRequestState.NEW)
 
         var requestAdapter = LocationRequestAdapter(this, listRequests)
         lvRequests.adapter = requestAdapter

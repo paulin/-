@@ -53,11 +53,11 @@ class MessageReceiver : BroadcastReceiver() {
                     var values = ContentValues()
                     val tempState = LocationRequestState.NEW.type
                     val tempDate = System.currentTimeMillis()
-                    values.put("State", tempState)
-                    values.put("Number", fromNumber)
-                    values.put("Requester", name)
-                    values.put("Note", name)
-                    values.put("Date", tempDate)
+                    values.put(LocationRequestDbManager.COL_STATE, tempState)
+                    values.put(LocationRequestDbManager.COL_NUMBER, fromNumber)
+                    values.put(LocationRequestDbManager.COL_REQUESTER, name)
+                    values.put(LocationRequestDbManager.COL_NOTE, name)
+                    values.put(LocationRequestDbManager.COL_REQUEST_DATE, tempDate)
 
                     //Add it to the database
                     var dbManager = LocationRequestDbManager(context)
