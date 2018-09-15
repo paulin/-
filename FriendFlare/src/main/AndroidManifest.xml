@@ -32,7 +32,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".LocationRequestActivity"
+            android:label="@string/app_name">
+        </activity>
         <!-- <service android:name="com.mop.friendflare.GPSService" /> -->
         <receiver android:name=".MessageReceiver">
             <intent-filter>
