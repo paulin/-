@@ -4,8 +4,11 @@ package com.mop.friendflare
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
+import android.location.Location
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
+import com.google.android.gms.location.FusedLocationProviderClient
 
 
 class GPSService : Service() {
@@ -25,6 +28,8 @@ class GPSService : Service() {
 
         private val TWO_MINUTES = 1000 * 60 * 2
     }
+
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient;
 
         //Network calls
     /**
@@ -56,16 +61,15 @@ class GPSService : Service() {
 
     @SuppressLint("MissingPermission")
     private fun getLocation() {
-//        mFusedLocationClient.lastLocation
-//                .addOnSuccessListener { location: Location? ->
-//                    // Got last known location. In some rare situations this can be null.
-//                    if (location != null) {
-//                        tvLatitude.text = location!!.latitude.toString()
-//                        tvLongitude.text = location!!.longitude.toString()
-//                    } else {
-//                        Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
+        mFusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        Log.v(LogConstants.MATT_TAG, "Got location $location" )
+                    } else {
+                        Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
     }
 
@@ -95,33 +99,33 @@ class GPSService : Service() {
 //
 
 
-//    override fun onCreate() {
-//
-//
+    override fun onCreate() {
+
+
 //        mGpsListener = GPSListener()
 //        bitly = BitlyAndroid(LOGIN, APIKEY)
 //        location_manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-//        Log.v(LogConstants.MATT_TAG, "Activating GPS Service")
-//
-//        super.onCreate()
-//    }
-//
-//
-//    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-//        resendMessages()
-//        return super.onStartCommand(intent, flags, startId)
-//    }
-//
-//
-//    override fun onDestroy() {
-//        Log.v(LogConstants.MATT_TAG, "Destroying GPS Service")
-//
+        Log.v(LogConstants.MATT_TAG, "Activating GPS Service")
+
+        super.onCreate()
+    }
+
+
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        resendMessages()
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+
+    override fun onDestroy() {
+        Log.v(LogConstants.MATT_TAG, "Destroying GPS Service")
+
 //        val location_manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 //
 //        location_manager.removeUpdates(mGpsListener)
-//
-//        super.onDestroy()
-//    }
+
+        super.onDestroy()
+    }
 
 //    private fun setLocation(location: Location?) {
 //        Log.v(LogConstants.MATT_TAG, "Location is found")

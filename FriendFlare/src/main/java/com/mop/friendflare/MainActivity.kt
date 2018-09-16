@@ -53,6 +53,12 @@ class MainActivity : AppCompatActivity() {
                     var intent = Intent(this, DeveloperActivity::class.java)
                     startActivity(intent)
                 }
+                R.id.send_responses -> {
+                    val i = Intent()
+                    //					i.putExtra(WhereMain.FROM_NUMBER, fromNumber);  Doesn't seem to work for later versions
+                    i.setClass(this, GPSService::class.java)
+                    startService(i)
+                }
             }
         }
 
@@ -70,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         val tempState = LocationRequestState.NEW.type
         val tempDate = System.currentTimeMillis()
         values.put(LocationRequestDbManager.COL_STATE, tempState)
-        values.put(LocationRequestDbManager.COL_NUMBER, "123456789")
+        values.put(LocationRequestDbManager.COL_NUMBER, "2066836567")
         values.put(LocationRequestDbManager.COL_REQUESTER, "Fakey McFake Face")
         values.put(LocationRequestDbManager.COL_NOTE, "This isn't real")
         values.put(LocationRequestDbManager.COL_REQUEST_DATE, tempDate)
