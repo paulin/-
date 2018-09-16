@@ -2,16 +2,17 @@ package com.mop.friendflare
 
 
 import android.annotation.SuppressLint
-import android.app.Service
+import android.app.IntentService
 import android.content.Intent
 import android.location.Location
-import android.os.IBinder
+import android.telephony.SmsManager
 import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 
-class GPSService : Service() {
+class GPSService : IntentService("MyIntentService") {
 
     companion object {
 
@@ -31,31 +32,15 @@ class GPSService : Service() {
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient;
 
-        //Network calls
-    /**
-     * The IAdderService is defined through IDL
-     */
-    private val mBinder = object : IRemoteGPSService.Stub() {
+    override fun onCreate() {
 
-        @Throws(android.os.RemoteException::class)
-        override fun resentTexts(): Int {
-            resendMessages()
-            return 0
-        }
-
+        Log.v(LogConstants.MATT_TAG, "Activating GPS Service")
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        super.onCreate()
     }
 
-    override fun onBind(intent: Intent): IBinder? {
-        Log.v(LogConstants.MATT_TAG, "GPS Service onBind")
-        return mBinder
-    }
-
-    /**
-     * Grabs the location and resents
-     */
-    private fun resendMessages() {
-        Log.v(LogConstants.MATT_TAG, "GPS Service Resending Locations")
-
+    override fun onHandleIntent(arg0: Intent?) {
+        Log.i(LogConstants.MATT_TAG, "Intent Service started")
         getLocation()
     }
 
@@ -66,12 +51,66 @@ class GPSService : Service() {
                     // Got last known location. In some rare situations this can be null.
                     if (location != null) {
                         Log.v(LogConstants.MATT_TAG, "Got location $location" )
+                        sendTextMessages("2066836567",formatMapLink(location))
+
                     } else {
                         Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
                     }
                 }
 
     }
+
+    private fun formatMapLink(loc: Location?): String {
+        var msg: String = "no message"
+        if (loc != null) {
+            msg = String.format(MAP_STRING, loc.latitude,
+                    loc.longitude, ZOOM_LEVEL)
+            // "http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=48.71518,-122.107856&sll=47.61357,-122.33139&sspn=0.471215,1.242828&ie=UTF8&z=12";
+            Log.v(LogConstants.MATT_TAG, "URL [$msg]")
+
+        } else {
+            Log.e(LogConstants.MATT_TAG, "Can't send message, location not known")
+        }
+        return msg
+    }
+
+    public fun sendTextMessages(contactAddress: String, msg: String) {
+
+        val sms : SmsManager = SmsManager.getDefault ()
+        sms.sendTextMessage(contactAddress, null, msg, null, null)
+        Log.e(LogConstants.MATT_TAG, "Sending [$msg] to [$contactAddress]")
+        Toast.makeText(this, "Message Sent", Toast.LENGTH_LONG).show()
+        Log.e(LogConstants.MATT_TAG, "Sent message to [$contactAddress]")
+    }
+
+    //Network calls
+//    /**
+//     * The IAdderService is defined through IDL
+//     */
+//    private val mBinder = object : IRemoteGPSService.Stub() {
+//
+//        @Throws(android.os.RemoteException::class)
+//        override fun resentTexts(): Int {
+//            resendMessages()
+//            return 0
+//        }
+//
+//    }
+
+//    override fun onBind(intent: Intent): IBinder? {
+//        Log.v(LogConstants.MATT_TAG, "GPS Service onBind")
+//        return mBinder
+//    }
+
+//    /**
+//     * Grabs the location and resents
+//     */
+//    private fun resendMessages() {
+//        Log.v(LogConstants.MATT_TAG, "GPS Service Resending Locations")
+//
+//        getLocation()
+//    }
+
 
 //    private var mGpsListener: GPSListener? = null
 //    private var location_manager: LocationManager? = null
@@ -99,33 +138,21 @@ class GPSService : Service() {
 //
 
 
-    override fun onCreate() {
-
-
-//        mGpsListener = GPSListener()
-//        bitly = BitlyAndroid(LOGIN, APIKEY)
-//        location_manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        Log.v(LogConstants.MATT_TAG, "Activating GPS Service")
-
-        super.onCreate()
-    }
-
-
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        resendMessages()
-        return super.onStartCommand(intent, flags, startId)
-    }
-
-
-    override fun onDestroy() {
-        Log.v(LogConstants.MATT_TAG, "Destroying GPS Service")
-
-//        val location_manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+//        resendMessages()
+//        return super.onStartCommand(intent, flags, startId)
+//    }
 //
-//        location_manager.removeUpdates(mGpsListener)
-
-        super.onDestroy()
-    }
+//
+//    override fun onDestroy() {
+//        Log.v(LogConstants.MATT_TAG, "Destroying GPS Service")
+//
+////        val location_manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+////
+////        location_manager.removeUpdates(mGpsListener)
+//
+//        super.onDestroy()
+//    }
 
 //    private fun setLocation(location: Location?) {
 //        Log.v(LogConstants.MATT_TAG, "Location is found")
@@ -165,20 +192,7 @@ class GPSService : Service() {
 //
 //    }
 
-//    private fun formatMapLink(loc: Location?): String? {
-//        var msg: String? = null
-//        if (loc != null) {
-//            GeoUtils.formLatLonString(GeoUtils.convertLocationToGeoPoint(loc))
-//            msg = String.format(MAP_STRING, loc.latitude,
-//                    loc.longitude, ZOOM_LEVEL)
-//            // "http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=48.71518,-122.107856&sll=47.61357,-122.33139&sspn=0.471215,1.242828&ie=UTF8&z=12";
-//            Log.v(LogConstants.MATT_TAG, "URL [$msg]")
-//
-//        } else {
-//            Log.e(LogConstants.MATT_TAG, "Can't send message, location not known")
-//        }
-//        return msg
-//    }
+
 //
 //    private fun shrinkAndFormatMsg(url: String): String {
 //        var shortUrl = ""
