@@ -2,7 +2,6 @@ package com.mop.friendflare
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -82,9 +81,33 @@ class LocationRequestDbManager {
         return historyArray
     }
 
-    fun queryAll(): Cursor {
+    fun queryAll(): ArrayList<LocationRequest> {
+        val historyArray = ArrayList<LocationRequest>()
 
-        return db!!.rawQuery("select * from " + dbTable, null)
+        val cursor =  db!!.rawQuery("select * from " + dbTable, null)
+
+        var history: LocationRequest? = null
+        val count = cursor.getCount()
+        Log.v(TAG, "Query all count [$count] ")
+        if(cursor.moveToFirst()) {
+            cursor.moveToFirst()
+            for (i in 0 until count) {
+                cursor.moveToPosition(i)
+                var id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_ID)))
+                var locationState = LocationRequestState.valueOf(cursor.getString(cursor.getColumnIndex(COL_STATE)))
+                var date = Date(cursor.getLong(cursor.getColumnIndex(COL_REQUEST_DATE))*1000)
+                var phoneNumber = cursor.getString(cursor.getColumnIndex(COL_NUMBER))
+                var whoRequested = cursor.getString(cursor.getColumnIndex(COL_REQUESTER))
+                var note = cursor.getString(cursor.getColumnIndex(COL_NOTE))
+
+                history = LocationRequest(id, locationState, date, phoneNumber, whoRequested, note )
+                historyArray.add(history)
+            }
+        }
+
+
+        cursor.close()
+        return historyArray
     }
 
     fun delete(selection: String, selectionArgs: Array<String>): Int {

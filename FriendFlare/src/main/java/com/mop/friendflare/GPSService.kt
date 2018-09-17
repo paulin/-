@@ -30,18 +30,29 @@ class GPSService : IntentService("MyIntentService") {
         private val TWO_MINUTES = 1000 * 60 * 2
     }
 
-    private lateinit var mFusedLocationClient: FusedLocationProviderClient;
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private lateinit var dbManager: LocationRequestDbManager
 
     override fun onCreate() {
 
         Log.v(LogConstants.MATT_TAG, "Activating GPS Service")
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        dbManager = LocationRequestDbManager(this)
         super.onCreate()
     }
 
     override fun onHandleIntent(arg0: Intent?) {
         Log.i(LogConstants.MATT_TAG, "Intent Service started")
+
+        //Pull up all the new locations and loop through them
+        var listRequests = dbManager.fetchLocationRequest(LocationRequestState.NEW)
+        for (i in listRequests.indices) {
+            Log.v(LogConstants.MATT_TAG, "$listRequests[i]")
+        }
+        //TODO send each item to getLocation, if it returns successfully, then set the state to done, anything goes wrong, set it to error.
         getLocation()
+
+
     }
 
     @SuppressLint("MissingPermission")

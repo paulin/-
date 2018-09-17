@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
         var dbManager = LocationRequestDbManager(this)
 
-        listRequests = dbManager.fetchLocationRequest(LocationRequestState.NEW)
+        listRequests = dbManager.queryAll()
 
         var requestAdapter = LocationRequestAdapter(this, listRequests)
         lvRequests.adapter = requestAdapter
