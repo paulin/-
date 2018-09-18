@@ -48,22 +48,21 @@ class GPSService : IntentService("MyIntentService") {
         var listRequests = dbManager.fetchLocationRequest(LocationRequestState.NEW)
         for (i in listRequests.indices) {
             Log.v(LogConstants.MATT_TAG, "$listRequests[i]")
+            getLocation(listRequests[i])
         }
-        //TODO send each item to getLocation, if it returns successfully, then set the state to done, anything goes wrong, set it to error.
-        getLocation()
-
-
     }
 
     @SuppressLint("MissingPermission")
-    private fun getLocation() {
+    private fun getLocation(request: LocationRequest) {
         mFusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
                     // Got last known location. In some rare situations this can be null.
                     if (location != null) {
                         Log.v(LogConstants.MATT_TAG, "Got location $location" )
-                        sendTextMessages("2066836567",formatMapLink(location))
-
+                        sendTextMessages(request.phoneNumber,formatMapLink(location))
+                        request.locationState = LocationRequestState.SENT
+                        var selectionArs = arrayOf(request.id.toString())
+                        val mID = dbManager.update(request.toContext(), "Id=?", selectionArs)
                     } else {
                         Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
                     }

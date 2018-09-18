@@ -1,5 +1,6 @@
 package com.mop.friendflare
 
+import android.content.ContentValues
 import java.util.*
 
 class LocationRequest {
@@ -8,7 +9,7 @@ class LocationRequest {
     var id: Int? = null
     var date: Date? = null
     var locationState: LocationRequestState? = null
-    var phoneNumber: String? = null
+    var phoneNumber: String = ""
     var requested: String? = null
     var reqNote: String? = null
 
@@ -19,5 +20,19 @@ class LocationRequest {
         this.phoneNumber = phoneNumber
         this.requested = whoRequested
         this.reqNote = reqNote
+    }
+
+    fun toContext() : ContentValues {
+        //Create a new location request
+        var values = ContentValues()
+        val tempState = this.locationState.toString()
+        val tempDate  = this.date.time
+        values.put(LocationRequestDbManager.COL_ID, this.id)
+        values.put(LocationRequestDbManager.COL_STATE, tempState )
+        values.put(LocationRequestDbManager.COL_NUMBER, this.phoneNumber)
+        values.put(LocationRequestDbManager.COL_REQUESTER, this.requested)
+        values.put(LocationRequestDbManager.COL_NOTE, this.reqNote)
+        values.put(LocationRequestDbManager.COL_REQUEST_DATE, tempDate)
+        return values;
     }
 }
