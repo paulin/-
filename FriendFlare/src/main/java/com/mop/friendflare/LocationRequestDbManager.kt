@@ -84,7 +84,7 @@ class LocationRequestDbManager {
     fun queryAll(): ArrayList<LocationRequest> {
         val historyArray = ArrayList<LocationRequest>()
 
-        val cursor =  db!!.rawQuery("select * from " + dbTable, null)
+        val cursor =  db!!.rawQuery("select * from " + dbTable + " ORDER BY " + COL_REQUEST_DATE + " ASC ", null)
 
         var history: LocationRequest? = null
         val count = cursor.getCount()

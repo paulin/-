@@ -84,6 +84,8 @@ class MainActivity : AppCompatActivity() {
         //Add it to the database
         var dbManager = LocationRequestDbManager(this)
         val mID = dbManager.insert(values)
+
+        loadQueryAll()
     }
 
     fun loadQueryAll() {
