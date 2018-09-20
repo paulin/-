@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity() {
             formatter.timeZone = TimeZone.getTimeZone("UTC")
             val formattedDate = formatter.format(mPing.date)
 
-            vh.tvTitle.text = mPing.requested
+            vh.tvTitle.text = "[" + mPing.locationState + "] " + mPing.requested
             vh.tvContent.text = "Request from [" + mPing.phoneNumber + "] on [" + formattedDate + "]"
 
             vh.ivEdit.setOnClickListener {

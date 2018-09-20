@@ -26,7 +26,7 @@ class LocationRequest {
         //Create a new location request
         var values = ContentValues()
         val tempState = this.locationState.toString()
-        val tempDate  = this.date.time
+        val tempDate  = this.date?.time
         values.put(LocationRequestDbManager.COL_ID, this.id)
         values.put(LocationRequestDbManager.COL_STATE, tempState )
         values.put(LocationRequestDbManager.COL_NUMBER, this.phoneNumber)
