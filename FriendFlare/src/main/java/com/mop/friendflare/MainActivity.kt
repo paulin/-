@@ -1,9 +1,14 @@
 package com.mop.friendflare
 
-import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
+import android.Manifest
+import android.content.*
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
@@ -17,6 +22,11 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val MY_PERMISSIONS_REQUEST_RECEIVE_SMS = 41
+    private val MY_PERMISSIONS_REQUEST_SEND_SMS = 42
+    private val MY_PERMISSIONS_REQUEST_READ_CONTACTS = 43
+    private var MY_PERMISSIONS_REQUEST_LOCATION_CODE = 44
+
     private var listRequests = ArrayList<LocationRequest>()
 
     val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.getDefault())
@@ -26,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        getAllPermissions()
         loadQueryAll()
 
         lvRequests.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, id ->
@@ -179,5 +190,138 @@ class MainActivity : AppCompatActivity() {
             this.ivEdit = view?.findViewById(R.id.ivEdit) as ImageView
             this.ivDelete = view?.findViewById(R.id.ivDelete) as ImageView
         }
+    }
+
+    private fun getAllPermissions() {
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                Manifest.permission.SEND_SMS)) {
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+
+                } else {
+                    // No explanation needed, we can request the permission.
+                    ActivityCompat.requestPermissions(this,
+                            arrayOf(Manifest.permission.SEND_SMS),
+                            this.MY_PERMISSIONS_REQUEST_SEND_SMS)
+                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+            } else {
+                // Permission has already been granted
+            }
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                Manifest.permission.RECEIVE_SMS)) {
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+
+                } else {
+                    // No explanation needed, we can request the permission.
+                    ActivityCompat.requestPermissions(this,
+                            arrayOf(Manifest.permission.RECEIVE_SMS),
+                            this.MY_PERMISSIONS_REQUEST_RECEIVE_SMS)
+                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+            }
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                //Request Location Permission
+                checkLocationPermission()
+            }
+
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                //Request Contact List Permissions
+                requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS),
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS)
+            } else  {
+                //Location Permission already granted
+                loadContacts()
+            }
+        }
+
+    }
+
+    private fun checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                AlertDialog.Builder(this)
+                        .setTitle("Location Permission Needed")
+                        .setMessage("This app needs the Location permission, please accept to use location functionality")
+                        .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+                            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), MY_PERMISSIONS_REQUEST_LOCATION_CODE)
+                        })
+                        .create()
+                        .show()
+
+            } else ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), MY_PERMISSIONS_REQUEST_LOCATION_CODE)
+        }
+    }
+
+    //TODO Do I really need to do this?
+    private fun loadContacts() {
+        var builder = StringBuilder()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(
+                        Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS),
+                    MY_PERMISSIONS_REQUEST_READ_CONTACTS)
+            //callback onRequestPermissionsResult
+        } else {
+            builder = getContacts()
+            //tvContacts.text = builder.toString()
+        }
+    }
+
+    private fun getContacts(): StringBuilder {
+        val builder = StringBuilder()
+        val resolver: ContentResolver = contentResolver;
+        val cursor = resolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null,
+                null)
+
+        if (cursor.count > 0) {
+            while (cursor.moveToNext()) {
+                val id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+                val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                val phoneNumber = (cursor.getString(
+                        cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))).toInt()
+
+                if (phoneNumber > 0) {
+                    val cursorPhone = contentResolver.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", arrayOf(id), null)
+
+                    if(cursorPhone.count > 0) {
+                        while (cursorPhone.moveToNext()) {
+                            val phoneNumValue = cursorPhone.getString(
+                                    cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                            builder.append("Contact: ").append(name).append(", Phone Number: ").append(
+                                    phoneNumValue).append("\n\n")
+                            Log.e("Name ===>",phoneNumValue);
+                        }
+                    }
+                    cursorPhone.close()
+                }
+            }
+        } else {
+            //   toast("No contacts available!")
+        }
+        cursor.close()
+        return builder
     }
 }
