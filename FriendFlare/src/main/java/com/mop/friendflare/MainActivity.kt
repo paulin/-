@@ -193,67 +193,84 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAllPermissions() {
+// The request code used in ActivityCompat.requestPermissions()
+// and returned in the Activity's onRequestPermissionsResult()
+        val PERMISSION_ALL = 1
+        val PERMISSIONS = arrayOf(
+                android.Manifest.permission.READ_CONTACTS,
+                android.Manifest.permission.SEND_SMS,
+                android.Manifest.permission.RECEIVE_SMS,
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                                Manifest.permission.SEND_SMS)) {
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-
-                } else {
-                    // No explanation needed, we can request the permission.
-                    ActivityCompat.requestPermissions(this,
-                            arrayOf(Manifest.permission.SEND_SMS),
-                            this.MY_PERMISSIONS_REQUEST_SEND_SMS)
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
-                }
-            } else {
-                // Permission has already been granted
-            }
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                                Manifest.permission.RECEIVE_SMS)) {
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-
-                } else {
-                    // No explanation needed, we can request the permission.
-                    ActivityCompat.requestPermissions(this,
-                            arrayOf(Manifest.permission.RECEIVE_SMS),
-                            this.MY_PERMISSIONS_REQUEST_RECEIVE_SMS)
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
-                }
-            }
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                //Request Location Permission
-                checkLocationPermission()
-            }
-
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                //Request Contact List Permissions
-                requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS),
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS)
-            } else  {
-                //Location Permission already granted
-                loadContacts()
-            }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL)
+        } else {
+            // Permission has already been granted
         }
+
+//        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+//                    != PackageManager.PERMISSION_GRANTED) {
+//                // Should we show an explanation?
+//                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                                Manifest.permission.SEND_SMS)) {
+//                    // Show an explanation to the user *asynchronously* -- don't block
+//                    // this thread waiting for the user's response! After the user
+//                    // sees the explanation, try again to request the permission.
+//
+//                } else {
+//                    // No explanation needed, we can request the permission.
+//                    ActivityCompat.requestPermissions(this,
+//                            arrayOf(Manifest.permission.SEND_SMS),
+//                            this.MY_PERMISSIONS_REQUEST_SEND_SMS)
+//                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+//                    // app-defined int constant. The callback method gets the
+//                    // result of the request.
+//                }
+//            } else {
+//                // Permission has already been granted
+//            }
+//
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
+//                    != PackageManager.PERMISSION_GRANTED) {
+//                // Should we show an explanation?
+//                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                                Manifest.permission.RECEIVE_SMS)) {
+//                    // Show an explanation to the user *asynchronously* -- don't block
+//                    // this thread waiting for the user's response! After the user
+//                    // sees the explanation, try again to request the permission.
+//
+//                } else {
+//                    // No explanation needed, we can request the permission.
+//                    ActivityCompat.requestPermissions(this,
+//                            arrayOf(Manifest.permission.RECEIVE_SMS),
+//                            this.MY_PERMISSIONS_REQUEST_RECEIVE_SMS)
+//                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+//                    // app-defined int constant. The callback method gets the
+//                    // result of the request.
+//                }
+//            }
+//
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+//                    != PackageManager.PERMISSION_GRANTED) {
+//                //Request Location Permission
+//                checkLocationPermission()
+//            }
+//
+//
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+//                    != PackageManager.PERMISSION_GRANTED) {
+//                //Request Contact List Permissions
+//                requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS),
+//                        MY_PERMISSIONS_REQUEST_READ_CONTACTS)
+//            } else  {
+//                //Location Permission already granted
+//                loadContacts()
+//            }
+//        }
 
     }
 
