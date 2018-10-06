@@ -38,10 +38,10 @@
         android:gravity="right">
 
         <ImageView
-            android:id="@+id/ivEdit"
+            android:id="@+id/ivMap"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            app:srcCompat="@drawable/ic_edit" />
+            app:srcCompat="@drawable/ic_person_pin_circle_black_24dp" />
 
         <ImageView
             android:id="@+id/ivDelete"

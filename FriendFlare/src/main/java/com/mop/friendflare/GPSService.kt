@@ -61,6 +61,8 @@ class GPSService : IntentService("MyIntentService") {
                         Log.v(LogConstants.MATT_TAG, "Got location $location" )
                         sendTextMessages(request.phoneNumber,formatMapLink(location))
                         request.locationState = LocationRequestState.SENT
+                        request.latitude = location.latitude.toString()
+                        request.longitude = location.longitude.toString()
                         var selectionArs = arrayOf(request.id.toString())
                         val mID = dbManager.update(request.toContext(), "Id=?", selectionArs)
                     } else {

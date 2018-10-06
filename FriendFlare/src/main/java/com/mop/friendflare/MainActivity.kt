@@ -3,6 +3,7 @@ package com.mop.friendflare
 import android.Manifest
 import android.content.*
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -19,6 +20,7 @@ import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -91,6 +93,8 @@ class MainActivity : AppCompatActivity() {
         values.put(LocationRequestDbManager.COL_REQUESTER, "Fakey McFake Face")
         values.put(LocationRequestDbManager.COL_NOTE, "This isn't real")
         values.put(LocationRequestDbManager.COL_REQUEST_DATE, tempDate)
+        values.put(LocationRequestDbManager.COL_LATITUDE, "47.6062")
+        values.put(LocationRequestDbManager.COL_LONGITUDE, "-122.3321")
 
         //Add it to the database
         var dbManager = LocationRequestDbManager(this)
@@ -143,8 +147,8 @@ class MainActivity : AppCompatActivity() {
             vh.tvTitle.text = "[" + mPing.locationState + "] " + mPing.requested
             vh.tvContent.text = "Request from [" + mPing.phoneNumber + "] on [" + formattedDate + "]"
 
-            vh.ivEdit.setOnClickListener {
-                updateNote(mPing)
+            vh.ivMap.setOnClickListener {
+                openMap(mPing)
             }
 
             vh.ivDelete.setOnClickListener {
@@ -170,6 +174,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun openMap(locationRequest: LocationRequest) {
+        val uri = String.format(Locale.ENGLISH, "geo:%s,%s", locationRequest.latitude, locationRequest.longitude)
+        Log.i("MATT", "Location to maps: " + uri)
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        startActivity(intent)
+    }
+
     private fun updateNote(locationRequest: LocationRequest) {
         var intent = Intent(this, LocationRequestActivity::class.java)
         intent.putExtra("MainActId", locationRequest.id)
@@ -181,13 +192,13 @@ class MainActivity : AppCompatActivity() {
     private class ViewHolder(view: View?) {
         val tvTitle: TextView
         val tvContent: TextView
-        val ivEdit: ImageView
+        val ivMap: ImageView
         val ivDelete: ImageView
 
         init {
             this.tvTitle = view?.findViewById(R.id.tvTitle) as TextView
             this.tvContent = view?.findViewById(R.id.tvContent) as TextView
-            this.ivEdit = view?.findViewById(R.id.ivEdit) as ImageView
+            this.ivMap = view?.findViewById(R.id.ivMap) as ImageView
             this.ivDelete = view?.findViewById(R.id.ivDelete) as ImageView
         }
     }
@@ -210,68 +221,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             // Permission has already been granted
         }
-
-//        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-//                    != PackageManager.PERMISSION_GRANTED) {
-//                // Should we show an explanation?
-//                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                                Manifest.permission.SEND_SMS)) {
-//                    // Show an explanation to the user *asynchronously* -- don't block
-//                    // this thread waiting for the user's response! After the user
-//                    // sees the explanation, try again to request the permission.
-//
-//                } else {
-//                    // No explanation needed, we can request the permission.
-//                    ActivityCompat.requestPermissions(this,
-//                            arrayOf(Manifest.permission.SEND_SMS),
-//                            this.MY_PERMISSIONS_REQUEST_SEND_SMS)
-//                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-//                    // app-defined int constant. The callback method gets the
-//                    // result of the request.
-//                }
-//            } else {
-//                // Permission has already been granted
-//            }
-//
-//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
-//                    != PackageManager.PERMISSION_GRANTED) {
-//                // Should we show an explanation?
-//                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                                Manifest.permission.RECEIVE_SMS)) {
-//                    // Show an explanation to the user *asynchronously* -- don't block
-//                    // this thread waiting for the user's response! After the user
-//                    // sees the explanation, try again to request the permission.
-//
-//                } else {
-//                    // No explanation needed, we can request the permission.
-//                    ActivityCompat.requestPermissions(this,
-//                            arrayOf(Manifest.permission.RECEIVE_SMS),
-//                            this.MY_PERMISSIONS_REQUEST_RECEIVE_SMS)
-//                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-//                    // app-defined int constant. The callback method gets the
-//                    // result of the request.
-//                }
-//            }
-//
-//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-//                    != PackageManager.PERMISSION_GRANTED) {
-//                //Request Location Permission
-//                checkLocationPermission()
-//            }
-//
-//
-//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
-//                    != PackageManager.PERMISSION_GRANTED) {
-//                //Request Contact List Permissions
-//                requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS),
-//                        MY_PERMISSIONS_REQUEST_READ_CONTACTS)
-//            } else  {
-//                //Location Permission already granted
-//                loadContacts()
-//            }
-//        }
-
     }
 
     private fun checkLocationPermission() {

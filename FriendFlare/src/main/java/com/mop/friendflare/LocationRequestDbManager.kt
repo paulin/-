@@ -23,11 +23,13 @@ class LocationRequestDbManager {
         const val COL_NUMBER = "Number"
         const val COL_REQUESTER = "Requester"
         const val COL_NOTE = "Note"
+        const val COL_LATITUDE = "Latitude"
+        const val COL_LONGITUDE = "Longitude"
     }
 
 
     private val CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + dbTable + " (" + COL_ID + " INTEGER PRIMARY KEY," +
-            COL_REQUEST_DATE + " BIGINT, " + COL_STATE + " INTEGER, " + COL_NUMBER + " TEXT, " + COL_REQUESTER + " TEXT, " + COL_NOTE + " TEXT);"
+            COL_REQUEST_DATE + " BIGINT, " + COL_STATE + " INTEGER, " + COL_NUMBER + " TEXT, " + COL_REQUESTER + " TEXT, " + COL_NOTE + " TEXT, " + COL_LATITUDE + " TEXT, " + COL_LONGITUDE + " TEXT);"
     private var db: SQLiteDatabase? = null
 
     constructor(context: Context) {
@@ -70,8 +72,10 @@ class LocationRequestDbManager {
                 var phoneNumber = cursor.getString(cursor.getColumnIndex(COL_NUMBER))
                 var whoRequested = cursor.getString(cursor.getColumnIndex(COL_REQUESTER))
                 var note = cursor.getString(cursor.getColumnIndex(COL_NOTE))
+                var latitude = cursor.getString(cursor.getColumnIndex(COL_LATITUDE))
+                var longitude = cursor.getString(cursor.getColumnIndex(COL_LONGITUDE))
 
-                history = LocationRequest(id, locationState, date, phoneNumber, whoRequested, note )
+                history = LocationRequest(id, locationState, date, phoneNumber, whoRequested, note, latitude, longitude )
                 historyArray.add(history)
             }
         }
@@ -99,8 +103,10 @@ class LocationRequestDbManager {
                 var phoneNumber = cursor.getString(cursor.getColumnIndex(COL_NUMBER))
                 var whoRequested = cursor.getString(cursor.getColumnIndex(COL_REQUESTER))
                 var note = cursor.getString(cursor.getColumnIndex(COL_NOTE))
+                var latitude = cursor.getString(cursor.getColumnIndex(COL_LATITUDE))
+                var longitude = cursor.getString(cursor.getColumnIndex(COL_LONGITUDE))
 
-                history = LocationRequest(id, locationState, date, phoneNumber, whoRequested, note )
+                history = LocationRequest(id, locationState, date, phoneNumber, whoRequested, note, latitude, longitude )
                 historyArray.add(history)
             }
         }
