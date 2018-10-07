@@ -1,15 +1,14 @@
 package com.mop.friendflare
 
 import android.Manifest
-import android.content.*
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
@@ -23,12 +22,6 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
-
-    private val MY_PERMISSIONS_REQUEST_RECEIVE_SMS = 41
-    private val MY_PERMISSIONS_REQUEST_SEND_SMS = 42
-    private val MY_PERMISSIONS_REQUEST_READ_CONTACTS = 43
-    private var MY_PERMISSIONS_REQUEST_LOCATION_CODE = 44
-
     private var listRequests = ArrayList<LocationRequest>()
 
     val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.getDefault())
@@ -104,9 +97,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loadQueryAll() {
-
         var dbManager = LocationRequestDbManager(this)
-
         listRequests = dbManager.queryAll()
 
         var requestAdapter = LocationRequestAdapter(this, listRequests)
@@ -133,7 +124,7 @@ class MainActivity : AppCompatActivity() {
                 view = layoutInflater.inflate(R.layout.note, parent, false)
                 vh = ViewHolder(view)
                 view.tag = vh
-                Log.i("JSA", "set Tag for ViewHolder, position: " + position)
+                Log.d(TAG, "Setting Tag for ViewHolder, position: " + position)
             } else {
                 view = convertView
                 vh = view.tag as ViewHolder
@@ -176,16 +167,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun openMap(locationRequest: LocationRequest) {
         val uri = String.format(Locale.ENGLISH, "geo:%s,%s", locationRequest.latitude, locationRequest.longitude)
-        Log.i("MATT", "Location to maps: " + uri)
+        Log.d(TAG, "Opening location to maps: " + uri)
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-        startActivity(intent)
-    }
-
-    private fun updateNote(locationRequest: LocationRequest) {
-        var intent = Intent(this, LocationRequestActivity::class.java)
-        intent.putExtra("MainActId", locationRequest.id)
-        intent.putExtra("MainActTitle", locationRequest.requested)
-        intent.putExtra("MainActContent", locationRequest.phoneNumber)
         startActivity(intent)
     }
 
@@ -221,73 +204,5 @@ class MainActivity : AppCompatActivity() {
         } else {
             // Permission has already been granted
         }
-    }
-
-    private fun checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                AlertDialog.Builder(this)
-                        .setTitle("Location Permission Needed")
-                        .setMessage("This app needs the Location permission, please accept to use location functionality")
-                        .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), MY_PERMISSIONS_REQUEST_LOCATION_CODE)
-                        })
-                        .create()
-                        .show()
-
-            } else ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), MY_PERMISSIONS_REQUEST_LOCATION_CODE)
-        }
-    }
-
-    //TODO Do I really need to do this?
-    private fun loadContacts() {
-        var builder = StringBuilder()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(
-                        Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS),
-                    MY_PERMISSIONS_REQUEST_READ_CONTACTS)
-            //callback onRequestPermissionsResult
-        } else {
-            builder = getContacts()
-            //tvContacts.text = builder.toString()
-        }
-    }
-
-    private fun getContacts(): StringBuilder {
-        val builder = StringBuilder()
-        val resolver: ContentResolver = contentResolver;
-        val cursor = resolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null,
-                null)
-
-        if (cursor.count > 0) {
-            while (cursor.moveToNext()) {
-                val id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
-                val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                val phoneNumber = (cursor.getString(
-                        cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))).toInt()
-
-                if (phoneNumber > 0) {
-                    val cursorPhone = contentResolver.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", arrayOf(id), null)
-
-                    if(cursorPhone.count > 0) {
-                        while (cursorPhone.moveToNext()) {
-                            val phoneNumValue = cursorPhone.getString(
-                                    cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                            builder.append("Contact: ").append(name).append(", Phone Number: ").append(
-                                    phoneNumValue).append("\n\n")
-                            Log.e("Name ===>",phoneNumValue);
-                        }
-                    }
-                    cursorPhone.close()
-                }
-            }
-        } else {
-            //   toast("No contacts available!")
-        }
-        cursor.close()
-        return builder
     }
 }
