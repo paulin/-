@@ -50,7 +50,7 @@ class LocationRequestDbManager {
      */
     fun fetchLocationRequest(state: LocationRequestState): ArrayList<LocationRequest> {
         val historyArray = ArrayList<LocationRequest>()
-        Log.v(LogConstants.MATT_TAG, "Fetching Location for State [" + state.name + "]")
+        Log.v(TAG, "Fetching Location for State [" + state.name + "]")
 //        val query =
 //                "SELECT * FROM $dbTable"// WHERE $COL_STATE =  \"$state\""
 

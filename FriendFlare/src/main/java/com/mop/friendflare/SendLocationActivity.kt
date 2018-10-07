@@ -28,7 +28,9 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_location_request.*
 import kotlinx.android.synthetic.main.activity_send_location.*
 
-
+/**
+ * This was an Activity I was using to test out a bunch of code. Consider it a playground.
+ */
 class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.google.android.gms.location.LocationListener {
 
     private val BITLYID = "R_55e77b4936404a9b9ef9fb0787b6edb5"
@@ -76,6 +78,11 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
         }
 
         getAllPermissions()
+
+        btFakeRequest.setOnClickListener {
+            Toast.makeText(this, "Fake Request Added", Toast.LENGTH_LONG).show()
+            makeFakeRequest()
+        }
 
         btGetGeo.setOnClickListener(this)
 
@@ -136,6 +143,25 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
 //                // Your custom logic goes here...
 //            }
 //        });
+    }
+
+    fun makeFakeRequest() {
+        //Create a new location request
+        var values = ContentValues()
+        val tempState = LocationRequestState.NEW.type
+        val tempDate = System.currentTimeMillis()
+        values.put(LocationRequestDbManager.COL_STATE, tempState)
+        values.put(LocationRequestDbManager.COL_NUMBER, "2066836567")
+        values.put(LocationRequestDbManager.COL_REQUESTER, "Fakey McFake Face")
+        values.put(LocationRequestDbManager.COL_NOTE, "This isn't real")
+        values.put(LocationRequestDbManager.COL_REQUEST_DATE, tempDate)
+        values.put(LocationRequestDbManager.COL_LATITUDE, "47.6062")
+        values.put(LocationRequestDbManager.COL_LONGITUDE, "-122.3321")
+
+        //Add it to the database
+        var dbManager = LocationRequestDbManager(this)
+        val mID = dbManager.insert(values)
+
     }
 
     private fun getAllPermissions() {

@@ -13,8 +13,38 @@ import android.provider.ContactsContract
 import android.telephony.SmsMessage
 import android.util.Log
 
-
+/**
+ * This class does the actual intercepting of the inbound message, it then starts the GPSService
+ * in a separate thread which will deal with the request in the background.
+ */
 class MessageReceiver : BroadcastReceiver() {
+
+    companion object {
+        private val TAG = "MessageReceiver"
+        val SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED"
+
+        val MAGIC_WORD = "@@?"
+        val NO_NAME = "???"
+
+        fun getOnlyNumerics(str: String?): String? {
+
+            if (str == null) {
+                return null
+            }
+
+            val strBuff = StringBuffer()
+            var c: Char
+
+            for (i in 0 until str.length) {
+                c = str[i]
+
+                if (Character.isDigit(c)) {
+                    strBuff.append(c)
+                }
+            }
+            return strBuff.toString()
+        }
+    }
 
     override fun onReceive(context: Context, intent: Intent) {
 
@@ -95,32 +125,5 @@ class MessageReceiver : BroadcastReceiver() {
         }
 
         return name
-    }
-
-    companion object {
-        private val TAG = "MessageReceiver"
-        val SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED"
-
-        val MAGIC_WORD = "@@?"
-        val NO_NAME = "???"
-
-        fun getOnlyNumerics(str: String?): String? {
-
-            if (str == null) {
-                return null
-            }
-
-            val strBuff = StringBuffer()
-            var c: Char
-
-            for (i in 0 until str.length) {
-                c = str[i]
-
-                if (Character.isDigit(c)) {
-                    strBuff.append(c)
-                }
-            }
-            return strBuff.toString()
-        }
     }
 }

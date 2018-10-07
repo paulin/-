@@ -4,19 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mop.friendflare.MainActivityOld">
     <item
-        android:id="@+id/fake_request"
-        android:orderInCategory="100"
-        android:title="@string/fake_request"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/send_responses"
         android:orderInCategory="100"
-        android:title="Send Responses"
+        android:title="Resend Responses"
         app:showAsAction="never" />
     <item
         android:id="@+id/sendLocation"
         android:layout_height="wrap_content"
         android:icon="@drawable/ic_add"
-        android:title="Add"
+        android:title="Utilities"
         app:showAsAction="ifRoom" />
 </menu>

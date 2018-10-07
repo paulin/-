@@ -1,7 +1,6 @@
 package com.mop.friendflare
 
 import android.Manifest
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -52,9 +51,6 @@ class MainActivity : AppCompatActivity() {
                     var intent = Intent(this, SendLocationActivity::class.java)
                     startActivity(intent)
                 }
-                R.id.fake_request -> {
-                    makeFakeRequest()
-                }
                 R.id.send_responses -> {
                     val i = Intent()
                     //					i.putExtra(WhereMain.FROM_NUMBER, fromNumber);  Doesn't seem to work for later versions
@@ -72,25 +68,7 @@ class MainActivity : AppCompatActivity() {
         loadQueryAll()
     }
 
-    fun makeFakeRequest() {
-        //Create a new location request
-        var values = ContentValues()
-        val tempState = LocationRequestState.NEW.type
-        val tempDate = System.currentTimeMillis()
-        values.put(LocationRequestDbManager.COL_STATE, tempState)
-        values.put(LocationRequestDbManager.COL_NUMBER, "2066836567")
-        values.put(LocationRequestDbManager.COL_REQUESTER, "Fakey McFake Face")
-        values.put(LocationRequestDbManager.COL_NOTE, "This isn't real")
-        values.put(LocationRequestDbManager.COL_REQUEST_DATE, tempDate)
-        values.put(LocationRequestDbManager.COL_LATITUDE, "47.6062")
-        values.put(LocationRequestDbManager.COL_LONGITUDE, "-122.3321")
 
-        //Add it to the database
-        var dbManager = LocationRequestDbManager(this)
-        val mID = dbManager.insert(values)
-
-        loadQueryAll()
-    }
 
     fun loadQueryAll() {
         var dbManager = LocationRequestDbManager(this)

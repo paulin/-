@@ -47,10 +47,6 @@
         </receiver>
 
         <activity android:name=".SendLocationActivity" />
-        <activity
-            android:name=".DeveloperActivity"
-            android:label="@string/title_activity_developer"></activity>
-        <service android:name=".GPSService" />
     </application>
 
 </manifest>
