@@ -55,10 +55,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.fake_request -> {
                     makeFakeRequest()
                 }
-                R.id.action_settings -> {
-                    var intent = Intent(this, DeveloperActivity::class.java)
-                    startActivity(intent)
-                }
                 R.id.send_responses -> {
                     val i = Intent()
                     //					i.putExtra(WhereMain.FROM_NUMBER, fromNumber);  Doesn't seem to work for later versions
