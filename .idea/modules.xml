@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AtAt/AtAt.iml" filepath="$PROJECT_DIR$/AtAt/AtAt.iml" />
       <module fileurl="file://$PROJECT_DIR$/FriendFlare.iml" filepath="$PROJECT_DIR$/FriendFlare.iml" />
-      <module fileurl="file://$PROJECT_DIR$/FriendFlare/FriendFlare-FriendFlare.iml" filepath="$PROJECT_DIR$/FriendFlare/FriendFlare-FriendFlare.iml" />
     </modules>
   </component>
 </project>

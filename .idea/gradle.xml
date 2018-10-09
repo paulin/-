@@ -8,7 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/FriendFlare" />
+            <option value="$PROJECT_DIR$/AtAt" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
