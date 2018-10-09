@@ -37,9 +37,11 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
     private val MY_PERMISSIONS_REQUEST_SEND_SMS = 42
     private val MY_PERMISSIONS_REQUEST_READ_CONTACTS = 43
 
+    private val FAKE_PHONE_NUMBER = "YOURPHONENUMBER"
+
     private val MAP_STRING_TEST = "http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=48.71518,-122.107856&sll=47.61357,-122.33139&sspn=0.471215,1.242828&ie=UTF8&z=" + ZOOM_LEVEL
     private val CONTENT_URI_SENT_MESSAGES = "content://sms/sent";
-    
+
 
     private var REQUEST_LOCATION_CODE = 101
     private var mGoogleApiClient: GoogleApiClient? = null
@@ -146,7 +148,7 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
         val tempState = LocationRequestState.NEW.type
         val tempDate = System.currentTimeMillis()
         values.put(LocationRequestDbManager.COL_STATE, tempState)
-        values.put(LocationRequestDbManager.COL_NUMBER, "2066836567")
+        values.put(LocationRequestDbManager.COL_NUMBER, FAKE_PHONE_NUMBER)
         values.put(LocationRequestDbManager.COL_REQUESTER, "Fakey McFake Face")
         values.put(LocationRequestDbManager.COL_NOTE, "This isn't real")
         values.put(LocationRequestDbManager.COL_REQUEST_DATE, tempDate)

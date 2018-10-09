@@ -47,16 +47,16 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item != null) {
             when (item.itemId) {
-                R.id.sendLocation -> {
-                    var intent = Intent(this, SendLocationActivity::class.java)
-                    startActivity(intent)
-                }
-                R.id.send_responses -> {
-                    val i = Intent()
-                    //					i.putExtra(WhereMain.FROM_NUMBER, fromNumber);  Doesn't seem to work for later versions
-                    i.setClass(this, GPSService::class.java)
-                    startService(i)
-                }
+//                R.id.sendLocation -> {
+//                    var intent = Intent(this, SendLocationActivity::class.java)
+//                    startActivity(intent)
+//                }
+//                R.id.send_responses -> {
+//                    val i = Intent()
+//                    //					i.putExtra(WhereMain.FROM_NUMBER, fromNumber);  Doesn't seem to work for later versions
+//                    i.setClass(this, GPSService::class.java)
+//                    startService(i)
+//                }
             }
         }
 
