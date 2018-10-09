@@ -21,7 +21,6 @@ import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.bitly.Bitly
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -33,7 +32,6 @@ import kotlinx.android.synthetic.main.activity_send_location.*
  */
 class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.google.android.gms.location.LocationListener {
 
-    private val BITLYID = "R_55e77b4936404a9b9ef9fb0787b6edb5"
     private val ZOOM_LEVEL = 12
     private val MY_PERMISSIONS_REQUEST_RECEIVE_SMS = 41
     private val MY_PERMISSIONS_REQUEST_SEND_SMS = 42
@@ -41,8 +39,7 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
 
     private val MAP_STRING_TEST = "http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=48.71518,-122.107856&sll=47.61357,-122.33139&sspn=0.471215,1.242828&ie=UTF8&z=" + ZOOM_LEVEL
     private val CONTENT_URI_SENT_MESSAGES = "content://sms/sent";
-
-    private val FRIEND_FLARE_MSG_TEMPLATE = "Here\'s my location: %s (sent via http://www.whereu-at.com )"
+    
 
     private var REQUEST_LOCATION_CODE = 101
     private var mGoogleApiClient: GoogleApiClient? = null
@@ -125,8 +122,6 @@ class SendLocationActivity : AppCompatActivity(), View.OnClickListener, com.goog
         tvLongitude.text = "Mongitude"
 
         buildGoogleApiClient()
-
-        Bitly.initialize(this, BITLYID);
 
 //        Bitly.initialize(this, "YOUR_APP_ID", Arrays.asList("yourdomain.com","yourotherdomain.com"), Arrays.asList("yourscheme"), new Bitly.Callback() {
 //        Bitly.Callback() {
