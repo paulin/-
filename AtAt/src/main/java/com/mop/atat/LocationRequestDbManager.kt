@@ -75,6 +75,9 @@ class LocationRequestDbManager {
                 var latitude = cursor.getString(cursor.getColumnIndex(COL_LATITUDE))
                 var longitude = cursor.getString(cursor.getColumnIndex(COL_LONGITUDE))
 
+                if(latitude == null) latitude = ""
+                if(longitude == null) longitude = ""
+
                 history = LocationRequest(id, locationState, date, phoneNumber, whoRequested, note, latitude, longitude )
                 historyArray.add(history)
             }
@@ -106,6 +109,8 @@ class LocationRequestDbManager {
                 var latitude = cursor.getString(cursor.getColumnIndex(COL_LATITUDE))
                 var longitude = cursor.getString(cursor.getColumnIndex(COL_LONGITUDE))
 
+                if(latitude == null) latitude = ""
+                if(longitude == null) longitude = ""
                 history = LocationRequest(id, locationState, date, phoneNumber, whoRequested, note, latitude, longitude )
                 historyArray.add(history)
             }
